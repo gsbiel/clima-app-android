@@ -15,13 +15,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.climaapp.interfaces.TimeOutDelegate;
+import com.example.climaapp.watchers.EditTextWatcher;
 
 public class MainActivity extends AppCompatActivity implements View.OnFocusChangeListener, View.OnClickListener, TimeOutDelegate {
 
     ConstraintLayout mainScreen;
+
     ImageView refreshBtn;
     ImageView searchBtn;
     EditText textField;
+    EditTextWatcher textWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnFocusChang
         this.refreshBtn = findViewById(R.id.refreshBtn);
         this.searchBtn = findViewById(R.id.searchBtn);
         this.textField = findViewById(R.id.searchTextField);
+        this.textWatcher = new EditTextWatcher(this.textField, 1);
     }
 
     private void registerForUIEvents(){
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnFocusChang
         this.textField.setOnFocusChangeListener(this);
         this.refreshBtn.setOnClickListener(this);
         this.searchBtn.setOnClickListener(this);
+        this.textField.addTextChangedListener(this.textWatcher);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

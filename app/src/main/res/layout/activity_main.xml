@@ -27,6 +27,9 @@
             android:textColorHighlight="#19424A"
             android:gravity="center_vertical"
             android:textAlignment="viewEnd"
+            android:inputType =
+                "textCapSentences|textAutoCorrect"
+            android:imeOptions="actionSearch"
             tools:ignore="RtlCompat"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/refreshBtn"
