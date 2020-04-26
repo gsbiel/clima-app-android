@@ -26,7 +26,6 @@
             android:textColorHighlight="#19424A"
             android:gravity="center_vertical"
             android:textAlignment="viewEnd"
-            android:backgroundTint="#ff0000"
             tools:ignore="RtlCompat"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/refreshBtn"
