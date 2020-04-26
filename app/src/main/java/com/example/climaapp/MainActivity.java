@@ -3,6 +3,7 @@ package com.example.climaapp;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import com.example.climaapp.interfaces.TimeOutDelegate;
 
 public class MainActivity extends AppCompatActivity implements View.OnFocusChangeListener, View.OnClickListener, TimeOutDelegate {
 
+    ConstraintLayout mainScreen;
     ImageView refreshBtn;
     ImageView searchBtn;
     EditText textField;
@@ -36,12 +38,14 @@ public class MainActivity extends AppCompatActivity implements View.OnFocusChang
     }
 
     private void catchReferencesFromLayout(){
+        this.mainScreen = findViewById(R.id.mainScreen);
         this.refreshBtn = findViewById(R.id.refreshBtn);
         this.searchBtn = findViewById(R.id.searchBtn);
         this.textField = findViewById(R.id.searchTextField);
     }
 
     private void registerForUIEvents(){
+        this.mainScreen.setOnClickListener(this);
         this.textField.setOnFocusChangeListener(this);
         this.refreshBtn.setOnClickListener(this);
         this.searchBtn.setOnClickListener(this);
@@ -68,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements View.OnFocusChang
             this.setAlphaForView(v);
         }else if(v.getId() == R.id.refreshBtn){
             this.setAlphaForView(v);
+        }else if(v.getId() == R.id.mainScreen){
+            this.hideSoftKeyBoard();
         }
     }
 
@@ -80,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements View.OnFocusChang
 
     private void hideSoftKeyBoard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-
         if(imm.isAcceptingText()) { // verify if the soft keyboard is open
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
