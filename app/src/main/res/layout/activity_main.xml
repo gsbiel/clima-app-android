@@ -19,6 +19,20 @@
             app:layout_constraintStart_toStartOf="parent"
             />
 
+        <TextView
+            android:id="@+id/eraseTextBtn"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#1B4247"
+            android:translationZ="10dp"
+            android:text="x"
+            android:textSize="28sp"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/searchTextField"
+            />
+
         <EditText
             android:id="@+id/searchTextField"
             android:layout_width="0dp"

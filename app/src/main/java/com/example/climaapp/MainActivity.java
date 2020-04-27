@@ -13,17 +13,25 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.example.climaapp.interfaces.EditTextWatcherDelegate;
 import com.example.climaapp.interfaces.TimeOutDelegate;
 import com.example.climaapp.watchers.EditTextWatcher;
 
-public class MainActivity extends AppCompatActivity implements View.OnFocusChangeListener, View.OnClickListener, TimeOutDelegate {
+public class MainActivity extends AppCompatActivity implements
+                                                                View.OnFocusChangeListener,
+                                                                View.OnClickListener,
+                                                                TimeOutDelegate,
+                                                                EditTextWatcherDelegate
+{
 
     ConstraintLayout mainScreen;
 
     ImageView refreshBtn;
     ImageView searchBtn;
     EditText textField;
+    TextView eraseTextFieldBtn;
     EditTextWatcher textWatcher;
 
     @Override
@@ -33,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnFocusChang
         setContentView(R.layout.activity_main);
         this.catchReferencesFromLayout();
         this.registerForUIEvents();
+        this.hideEraseButton(true);
+
+        this.textWatcher.delegate = this;
     }
 
     private void hideActionBar(){
@@ -45,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnFocusChang
         this.refreshBtn = findViewById(R.id.refreshBtn);
         this.searchBtn = findViewById(R.id.searchBtn);
         this.textField = findViewById(R.id.searchTextField);
+        this.eraseTextFieldBtn = findViewById(R.id.eraseTextBtn);
         this.textWatcher = new EditTextWatcher(this.textField, 1);
     }
 
@@ -53,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnFocusChang
         this.textField.setOnFocusChangeListener(this);
         this.refreshBtn.setOnClickListener(this);
         this.searchBtn.setOnClickListener(this);
+        this.eraseTextFieldBtn.setOnClickListener(this);
         this.textField.addTextChangedListener(this.textWatcher);
     }
 
@@ -79,6 +92,9 @@ public class MainActivity extends AppCompatActivity implements View.OnFocusChang
             this.setAlphaForView(v);
         }else if(v.getId() == R.id.mainScreen){
             this.hideSoftKeyBoard();
+        }else if(v.getId() == R.id.eraseTextBtn){
+            this.setAlphaForView(v);
+            this.textField.setText("");
         }
     }
 
@@ -96,9 +112,23 @@ public class MainActivity extends AppCompatActivity implements View.OnFocusChang
         }
     }
 
+    private void hideEraseButton(Boolean flag){
+        if(flag){
+            this.eraseTextFieldBtn.setVisibility(View.INVISIBLE);
+        }else{
+            this.eraseTextFieldBtn.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     public void didFinishTimer(Integer viewId) {
-        ImageView imageButton = findViewById(viewId);
+        View imageButton = findViewById(viewId);
         imageButton.setAlpha((float) 1.0);
+    }
+
+    @Override
+    public void eraseButtonShouldAppear(Boolean flag) {
+        System.out.println("Esconder ou nao esconder? eis a questão");
+        this.hideEraseButton(!flag);
     }
 }
