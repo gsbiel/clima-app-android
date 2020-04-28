@@ -108,6 +108,9 @@ public class MainActivity extends AppCompatActivity implements
         this.textField = findViewById(R.id.searchTextField);
         this.eraseTextFieldBtn = findViewById(R.id.eraseTextBtn);
         this.textWatcher = new EditTextWatcher(this.textField, 1);
+        this.localNameLabel = findViewById(R.id.localLabel);
+        this.temperatureLabel = findViewById(R.id.temperatureLabel);
+        this.weatherImage = findViewById(R.id.weatherImage);
     }
 
     private void registerForUIEvents(){
@@ -243,13 +246,13 @@ public class MainActivity extends AppCompatActivity implements
         }else if(weatherType>=500 && weatherType <= 531){
             this.weatherImage.setImageResource(R.drawable.ic_cloud_rain);
         }else if(weatherType>=600 && weatherType <= 622){
-            this.weatherImage.setImageResource(R.drawable.ic_cloud_snow;
+            this.weatherImage.setImageResource(R.drawable.ic_cloud_snow);
         }else if(weatherType>=701 && weatherType <= 781){
             this.weatherImage.setImageResource(R.drawable.ic_cloud_fog);
         }else if(weatherType==800){
             this.weatherImage.setImageResource(R.drawable.ic_sun);
         }else if(weatherType>=801 && weatherType <=804){
-            this.weatherImage.setImageResource(R.drawable.ic_cloud_bolt;
+            this.weatherImage.setImageResource(R.drawable.ic_cloud_bolt);
         }else{
             this.weatherImage.setImageResource(R.drawable.ic_cloud);
         }
@@ -273,8 +276,9 @@ public class MainActivity extends AppCompatActivity implements
 
         try {
             String localName = weatherData.getString("name");
-            int weatherType = weatherData.getJSONArray("weather").getJSONObject(0).getInt("int");
+            int weatherType = weatherData.getJSONArray("weather").getJSONObject(0).getInt("id");
             double temperature = weatherData.getJSONObject("main").getDouble("temp");
+            this.updateUI(localName, weatherType, temperature);
         } catch (JSONException e) {
             e.printStackTrace();
         }
