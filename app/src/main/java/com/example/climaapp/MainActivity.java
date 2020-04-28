@@ -4,11 +4,26 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -28,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements
                                                                 WeatherBrainDelegate
 {
 
+    private static final int PERMISSION_REQUEST_CODE = 200;
+
     ConstraintLayout mainScreen;
 
     ImageView refreshBtn;
@@ -37,6 +54,28 @@ public class MainActivity extends AppCompatActivity implements
     EditTextWatcher textWatcher;
 
     WeatherBrain weatherBrain;
+
+    final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            System.out.println("Localização: " +  location.getLatitude() + ", " + location.getLongitude());
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            Log.d("Status Changed", String.valueOf(status));
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            Log.d("Provider Enabled", provider);
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            Log.d("Provider Disabled", provider);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +89,8 @@ public class MainActivity extends AppCompatActivity implements
         this.hideEraseButton(true);
         this.textWatcher.delegate = this;
 
-        weatherBrain.fetchWeatherDataForCity("Salvador");
+//        weatherBrain.fetchWeatherDataForCity("Salvador");
+        this.fetchWeatherDataForCurrentLocation();
     }
 
     private void hideActionBar(){
@@ -76,6 +116,59 @@ public class MainActivity extends AppCompatActivity implements
         this.textField.addTextChangedListener(this.textWatcher);
     }
 
+    public void fetchWeatherDataForCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Not granted
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE );
+            return;
+        }
+
+        LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        final boolean gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        if (!gpsEnabled) {
+            this.askForGPS();
+        }else{
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+            criteria.setPowerRequirement(Criteria.POWER_LOW);
+            criteria.setAltitudeRequired(false);
+            criteria.setBearingRequired(false);
+            criteria.setSpeedRequired(false);
+            criteria.setCostAllowed(true);
+            criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+            criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
+
+            lm.requestSingleUpdate(criteria, locationListener, null);   //looper = null
+        }
+
+    }
+
+    private void enableLocationSettings() {
+        Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(settingsIntent);
+    }
+
+    private void askForGPS(){
+        // 1. Instantiate an <code><a href="/reference/android/app/AlertDialog.Builder.html">AlertDialog.Builder</a></code> with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setMessage("Acesso ao GPS requerido. Pressione Ok para ativá-lo.")
+                .setTitle("GPS")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        enableLocationSettings();
+                    }
+                })
+                .setNegativeButton("Cancel", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
@@ -97,6 +190,9 @@ public class MainActivity extends AppCompatActivity implements
             this.setAlphaForView(v);
         }else if(v.getId() == R.id.refreshBtn){
             this.setAlphaForView(v);
+            if(this.textField.length() == 0){
+                this.fetchWeatherDataForCurrentLocation();
+            }
         }else if(v.getId() == R.id.mainScreen){
             this.hideSoftKeyBoard();
         }else if(v.getId() == R.id.eraseTextBtn){
@@ -141,5 +237,20 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void didFinishFetchingDataFromAPI() {
         System.out.println("Dados buscados!");
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    fetchWeatherDataForCurrentLocation();
+                }
+                return;
+            }
+        }
     }
 }

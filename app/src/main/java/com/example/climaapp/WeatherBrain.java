@@ -1,6 +1,12 @@
 package com.example.climaapp;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+
+import androidx.core.app.ActivityCompat;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -19,19 +25,19 @@ public class WeatherBrain {
     public WeatherBrainDelegate delegate;
     Context context;
 
-    WeatherBrain(Context context){
+    WeatherBrain(Context context) {
         this.context = context;
     }
 
-    public void fetchWeatherDataForCity(String city){
+    public void fetchWeatherDataForCity(String city) {
         String url = WeatherBrain.URL_BASE + "&q=" + city;
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>(){
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 System.out.println("Response: " + response.toString());
                 delegate.didFinishFetchingDataFromAPI();
             }
-        }, new Response.ErrorListener(){
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 System.out.println("Erro: " + error);
@@ -39,5 +45,9 @@ public class WeatherBrain {
             }
         });
         WeatherAPIClient.getInstance(context).addToRequestQueue(jsonObjectRequest);
+    }
+
+    public void fetchWeatherDataForLocation(double latitude, double longitude){
+
     }
 }
