@@ -17,13 +17,15 @@ import android.widget.TextView;
 
 import com.example.climaapp.interfaces.EditTextWatcherDelegate;
 import com.example.climaapp.interfaces.TimeOutDelegate;
+import com.example.climaapp.interfaces.WeatherBrainDelegate;
 import com.example.climaapp.watchers.EditTextWatcher;
 
 public class MainActivity extends AppCompatActivity implements
                                                                 View.OnFocusChangeListener,
                                                                 View.OnClickListener,
                                                                 TimeOutDelegate,
-                                                                EditTextWatcherDelegate
+                                                                EditTextWatcherDelegate,
+                                                                WeatherBrainDelegate
 {
 
     ConstraintLayout mainScreen;
@@ -34,16 +36,21 @@ public class MainActivity extends AppCompatActivity implements
     TextView eraseTextFieldBtn;
     EditTextWatcher textWatcher;
 
+    WeatherBrain weatherBrain;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.hideActionBar();
         setContentView(R.layout.activity_main);
+        this.weatherBrain = new WeatherBrain(this.getApplicationContext());
+        weatherBrain.delegate = this;
         this.catchReferencesFromLayout();
         this.registerForUIEvents();
         this.hideEraseButton(true);
-
         this.textWatcher.delegate = this;
+
+        weatherBrain.fetchWeatherDataForCity("Salvador");
     }
 
     private void hideActionBar(){
@@ -128,7 +135,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void eraseButtonShouldAppear(Boolean flag) {
-        System.out.println("Esconder ou nao esconder? eis a questão");
         this.hideEraseButton(!flag);
+    }
+
+    @Override
+    public void didFinishFetchingDataFromAPI() {
+        System.out.println("Dados buscados!");
     }
 }
