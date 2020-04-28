@@ -48,6 +48,21 @@ public class WeatherBrain {
     }
 
     public void fetchWeatherDataForLocation(double latitude, double longitude){
-
+        System.out.println("Localização: " + latitude + ", " + longitude);
+        String url = WeatherBrain.URL_BASE + "&lat=" + latitude + "&lon=" + longitude;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                System.out.println("Response: " + response.toString());
+                delegate.didFinishFetchingDataFromAPI();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("Erro: " + error);
+                delegate.didFinishFetchingDataFromAPI();
+            }
+        });
+        WeatherAPIClient.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 }

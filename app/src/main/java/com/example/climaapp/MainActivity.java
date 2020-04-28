@@ -18,10 +18,8 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -58,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements
     final LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            System.out.println("Localização: " +  location.getLatitude() + ", " + location.getLongitude());
+            weatherBrain.fetchWeatherDataForLocation(location.getLatitude(), location.getLongitude());
         }
 
         @Override
