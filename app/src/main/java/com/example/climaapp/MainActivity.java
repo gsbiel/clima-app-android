@@ -1,11 +1,9 @@
 package com.example.climaapp;
-
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -28,10 +26,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.example.climaapp.interfaces.EditTextWatcherDelegate;
 import com.example.climaapp.interfaces.TimeOutDelegate;
 import com.example.climaapp.interfaces.WeatherBrainDelegate;
 import com.example.climaapp.watchers.EditTextWatcher;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements
                                                                 View.OnFocusChangeListener,
@@ -44,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements
     private static final int PERMISSION_REQUEST_CODE = 200;
 
     ConstraintLayout mainScreen;
-
     ImageView refreshBtn;
     ImageView searchBtn;
     EditText textField;
@@ -52,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements
     EditTextWatcher textWatcher;
 
     WeatherBrain weatherBrain;
+
+    String currentCity;
 
     final LocationListener locationListener = new LocationListener() {
         @Override
@@ -186,9 +189,14 @@ public class MainActivity extends AppCompatActivity implements
         this.hideSoftKeyBoard();
         if(v.getId() == R.id.searchBtn){
             this.setAlphaForView(v);
+            this.currentCity = this.textField.getText().toString();
+            weatherBrain.fetchWeatherDataForCity(this.currentCity);
         }else if(v.getId() == R.id.refreshBtn){
             this.setAlphaForView(v);
-            if(this.textField.length() == 0){
+            if(this.currentCity != "" && this.currentCity != null){
+                weatherBrain.fetchWeatherDataForCity(this.currentCity);
+            }
+            else{
                 this.fetchWeatherDataForCurrentLocation();
             }
         }else if(v.getId() == R.id.mainScreen){
@@ -233,8 +241,22 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void didFinishFetchingDataFromAPI() {
+    public void didFinishFetchingDataFromAPI(JSONObject weatherData) {
         System.out.println("Dados buscados!");
+
+        try {
+            String localName = weatherData.getString("name");
+            String weatherType = weatherData.getJSONArray("weather").getJSONObject(0).getString("main");
+            double temperature = weatherData.getJSONObject("main").getDouble("temp");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void didFinishFetchingDataFromAPIWithError(VolleyError error) {
+        System.out.println("Erro na requisição: " + error.toString());
     }
 
     @Override

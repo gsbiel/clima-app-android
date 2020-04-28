@@ -1,20 +1,11 @@
 package com.example.climaapp;
-
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
-
-import androidx.core.app.ActivityCompat;
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.climaapp.interfaces.WeatherBrainDelegate;
 import com.example.climaapp.services.WeatherAPIClient;
-
 import org.json.JSONObject;
 
 public class WeatherBrain {
@@ -34,14 +25,12 @@ public class WeatherBrain {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                System.out.println("Response: " + response.toString());
-                delegate.didFinishFetchingDataFromAPI();
+                delegate.didFinishFetchingDataFromAPI(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("Erro: " + error);
-                delegate.didFinishFetchingDataFromAPI();
+                delegate.didFinishFetchingDataFromAPIWithError(error);
             }
         });
         WeatherAPIClient.getInstance(context).addToRequestQueue(jsonObjectRequest);
@@ -53,14 +42,12 @@ public class WeatherBrain {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                System.out.println("Response: " + response.toString());
-                delegate.didFinishFetchingDataFromAPI();
+                delegate.didFinishFetchingDataFromAPI(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("Erro: " + error);
-                delegate.didFinishFetchingDataFromAPI();
+                delegate.didFinishFetchingDataFromAPIWithError(error);
             }
         });
         WeatherAPIClient.getInstance(context).addToRequestQueue(jsonObjectRequest);
