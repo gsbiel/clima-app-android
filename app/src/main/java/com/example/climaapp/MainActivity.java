@@ -52,6 +52,10 @@ public class MainActivity extends AppCompatActivity implements
     TextView eraseTextFieldBtn;
     EditTextWatcher textWatcher;
 
+    ImageView weatherImage;
+    TextView localNameLabel;
+    TextView temperatureLabel;
+
     WeatherBrain weatherBrain;
 
     String currentCity;
@@ -89,8 +93,6 @@ public class MainActivity extends AppCompatActivity implements
         this.registerForUIEvents();
         this.hideEraseButton(true);
         this.textWatcher.delegate = this;
-
-//        weatherBrain.fetchWeatherDataForCity("Salvador");
         this.fetchWeatherDataForCurrentLocation();
     }
 
@@ -229,6 +231,31 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    private void updateUI(String localName, int weatherType, double temperature){
+
+        this.localNameLabel.setText(localName);
+        this.temperatureLabel.setText(Double.toString(temperature));
+
+        if(weatherType>=200 && weatherType <= 232){
+            this.weatherImage.setImageResource(R.drawable.ic_cloud_bolt);
+        }else if(weatherType>=300 && weatherType <= 321){
+            this.weatherImage.setImageResource(R.drawable.ic_cloud_drizzle);
+        }else if(weatherType>=500 && weatherType <= 531){
+            this.weatherImage.setImageResource(R.drawable.ic_cloud_rain);
+        }else if(weatherType>=600 && weatherType <= 622){
+            this.weatherImage.setImageResource(R.drawable.ic_cloud_snow;
+        }else if(weatherType>=701 && weatherType <= 781){
+            this.weatherImage.setImageResource(R.drawable.ic_cloud_fog);
+        }else if(weatherType==800){
+            this.weatherImage.setImageResource(R.drawable.ic_sun);
+        }else if(weatherType>=801 && weatherType <=804){
+            this.weatherImage.setImageResource(R.drawable.ic_cloud_bolt;
+        }else{
+            this.weatherImage.setImageResource(R.drawable.ic_cloud);
+        }
+
+    }
+
     @Override
     public void didFinishTimer(Integer viewId) {
         View imageButton = findViewById(viewId);
@@ -246,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements
 
         try {
             String localName = weatherData.getString("name");
-            String weatherType = weatherData.getJSONArray("weather").getJSONObject(0).getString("main");
+            int weatherType = weatherData.getJSONArray("weather").getJSONObject(0).getInt("int");
             double temperature = weatherData.getJSONObject("main").getDouble("temp");
         } catch (JSONException e) {
             e.printStackTrace();
