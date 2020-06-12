@@ -19,4 +19,5 @@ class ClimaFragment: Fragment(){
 
         return binding.root
     }
+
 }
