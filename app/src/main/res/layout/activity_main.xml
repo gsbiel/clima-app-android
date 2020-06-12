@@ -5,100 +5,15 @@
     android:id="@+id/mainScreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/light_background"
     tools:context=".MainActivity">
 
-        <ImageView
-            android:id="@+id/refreshBtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:srcCompat="@drawable/ic_refresh"
-            android:tint="#19424A"
-            android:padding="10dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-
-        <TextView
-            android:id="@+id/eraseTextBtn"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="#1B4247"
-            android:translationZ="10dp"
-            android:text="x"
-            android:textSize="28sp"
-            android:gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/searchTextField"
-            />
-
-        <EditText
-            android:id="@+id/searchTextField"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:hint="Search"
-            android:textColorHighlight="#19424A"
-            android:gravity="center_vertical"
-            android:textAlignment="viewEnd"
-            android:inputType =
-                "textCapSentences|textAutoCorrect"
-            android:imeOptions="actionSearch"
-            tools:ignore="RtlCompat"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/refreshBtn"
-            app:layout_constraintEnd_toStartOf="@+id/searchBtn"
-            />
-
-        <ImageView
-            android:id="@+id/searchBtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:srcCompat="@drawable/ic_search"
-            android:tint="#19424a"
-            android:padding="10dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/searchTextField"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
-
-    <LinearLayout
+    <fragment
+        android:id="@+id/weatherFragment"
+        android:name="com.example.climaapp.clima.ClimaFragment"
+        tools:layout="@layout/fragment_weather"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        >
-
-        <ImageView
-            android:id="@+id/weatherImage"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            app:srcCompat="@drawable/ic_rain"
-            android:tint="#19424A"
-            />
-
-        <TextView
-            android:id="@+id/temperatureLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="29ºC"
-            android:textColor="#000"
-            android:textSize="40sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            />
-        <TextView
-            android:id="@+id/localLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Vitória"
-            android:textColor="#19424A"
-            android:textSize="36sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            />
-
-    </LinearLayout>
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
