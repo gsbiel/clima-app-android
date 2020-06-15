@@ -1,5 +1,6 @@
 package com.example.climaapp.clima
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -32,7 +33,11 @@ class ClimaViewModel: ViewModel(){
         _weatherType.value = WeatherType.CLOUD_FOG
     }
 
-    fun refresh(){
+    fun onSendButtonPressed() {
+        Log.i("ClimaViewModel", "Send Button pressed!")
+    }
 
+    fun refresh(){
+        Log.i("ClimaViewModel", "Refresh Button pressed!")
     }
 }

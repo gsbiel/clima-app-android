@@ -33,11 +33,13 @@
             >
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapWords"
+                android:inputType="textCapWords|textAutoCorrect"
                 android:maxLines="1"
                 android:text="@={viewModel.textInput}"
+                android:imeOptions="actionSend"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
