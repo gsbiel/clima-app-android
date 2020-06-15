@@ -35,6 +35,7 @@ class ClimaViewModel: ViewModel(){
 
     fun onSendButtonPressed() {
         Log.i("ClimaViewModel", "Send Button pressed!")
+        textInput.value = ""
     }
 
     fun refresh(){

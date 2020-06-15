@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.climaapp.R
 import com.example.climaapp.databinding.FragmentWeatherBinding
+import com.example.climaapp.hideKeyboard
+
 
 class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
 
@@ -33,9 +35,15 @@ class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
         if(v?.id == binding.searchEditText.id && actionId == EditorInfo.IME_ACTION_SEND){
             viewModel.onSendButtonPressed()
-            return false
+            binding.searchEditText.clearFocus()
+            dismissSoftKeyboard()
+            return true
         }
         return false
+    }
+
+    private fun dismissSoftKeyboard(){
+        this.hideKeyboard()
     }
 
 }
