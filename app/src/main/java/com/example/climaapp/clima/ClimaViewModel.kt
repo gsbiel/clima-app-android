@@ -35,11 +35,17 @@ class ClimaViewModel: ViewModel(){
     val refreshEvent: LiveData<Boolean>
         get() = _refreshEvent
 
+    private val _setPermissionEvent = MutableLiveData<Boolean>()
+    val setPermissionEvent: LiveData<Boolean>
+        get() = _setPermissionEvent
+
     init{
         _temperature.value = 29.0
         _city.value = "Vitória"
         _weatherType.value = WeatherType.CLOUD_FOG
         _refreshEvent.value = false
+        _setPermissionEvent.value = false
+        _permissionsGranted.value = true
     }
 
     fun onSendButtonPressed() {
@@ -47,15 +53,27 @@ class ClimaViewModel: ViewModel(){
         textInput.value = ""
     }
 
-    fun refresh(){
-        if(_city.value!!.length > 0){
+    fun onSetPermissionButtonPressed() {
+        Log.i("ClimaViewModel", "Set Permission button pressed!")
+        _setPermissionEvent.value = true
+    }
 
-        }else{
-            _refreshEvent.value = true
+    fun setPermissionsTo(flag: Boolean){
+        _permissionsGranted.value = flag
+    }
+
+    fun refresh(){
+        _refreshEvent.value = true
+        if(_permissionsGranted.value!!){
+            Log.i("ClimaViewModel", "Refresh is Authorized")
         }
     }
 
     fun refreshEventCompleted(){
         _refreshEvent.value = false
+    }
+
+    fun setPermissionEventCompleted(){
+        _setPermissionEvent.value = false
     }
 }

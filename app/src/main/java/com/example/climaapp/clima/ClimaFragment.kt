@@ -50,19 +50,13 @@ class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
 
         binding.searchEditText.setOnEditorActionListener(this)
 
-        viewModel.refreshEvent.observe(this, Observer {
-            if(it){
-                Log.i("ClimaViewModel", "Refresh Button pressed!")
-                viewModel.refreshEventCompleted()
-            }
-        })
+        registerForViewModelEvents()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkPermission(permissions)) {
                 Log.i("ClimaFragment", "Todas as permissões okay!")
                 getLocation()
             } else {
-                Log.i("ClimaFragment", "Solicitando permissões...")
                 requestPermissions(permissions, PERMISSION_REQUEST)
             }
         } else {
@@ -70,6 +64,30 @@ class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
         }
 
         return binding.root
+    }
+
+    private fun registerForViewModelEvents() {
+
+        viewModel.refreshEvent.observe(this, Observer {
+            if(it){
+                Log.i("ClimaViewModel", "Refresh Button pressed!")
+                if(!viewModel.permissionsGranted.value!!){
+                    Toast.makeText(context!!, "Permissions has been denied. Click on Set Permission button to allow acces to location services.", Toast.LENGTH_SHORT).show()
+                }
+                viewModel.refreshEventCompleted()
+            }
+        })
+
+        viewModel.setPermissionEvent.observe(this, Observer{
+            if(it){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(permissions, PERMISSION_REQUEST)
+                } else {
+                    Log.i("ClimaFragment", "Versão do android não compatível")
+                }
+                viewModel.setPermissionEventCompleted()
+            }
+        })
     }
 
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
@@ -186,14 +204,17 @@ class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
                     allSuccess = false
                     val requestAgain = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(permissions[i])
                     if (requestAgain) {
-                        Toast.makeText(context!!, "Permission denied", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(context!!, "Permission denied", Toast.LENGTH_SHORT).show()
+                        viewModel.setPermissionsTo(false)
                     } else {
                         Toast.makeText(context!!, "Go to settings and enable the permission", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
-            if (allSuccess)
+            if (allSuccess) {
                 Log.i("ClimaFragment", "allSuccess!")
+                viewModel.setPermissionsTo(true)
+            }
         }
     }
 

@@ -27,9 +27,9 @@ fun ImageView.setCloudImage(type: WeatherType){
 @BindingAdapter("permissionsGranted")
 fun Button.setVisibility(flag: Boolean){
     if(flag){
-        visibility = View.VISIBLE
+        visibility = View.INVISIBLE
     }
     else{
-        visibility = View.INVISIBLE
+        visibility = View.VISIBLE
     }
 }
