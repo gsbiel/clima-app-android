@@ -27,10 +27,16 @@ class ClimaViewModel: ViewModel(){
     val weatherType: LiveData<WeatherType>
         get() = _weatherType
 
+
+    private val _refreshEvent = MutableLiveData<Boolean>()
+    val refreshEvent: LiveData<Boolean>
+        get() = _refreshEvent
+
     init{
         _temperature.value = 29.0
         _city.value = "Vitória"
         _weatherType.value = WeatherType.CLOUD_FOG
+        _refreshEvent.value = false
     }
 
     fun onSendButtonPressed() {
@@ -39,6 +45,14 @@ class ClimaViewModel: ViewModel(){
     }
 
     fun refresh(){
-        Log.i("ClimaViewModel", "Refresh Button pressed!")
+        if(_city.value!!.length > 0){
+
+        }else{
+            _refreshEvent.value = true
+        }
+    }
+
+    fun refreshEventCompleted(){
+        _refreshEvent.value = false
     }
 }
