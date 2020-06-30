@@ -1,5 +1,7 @@
 package com.example.climaapp.clima
 
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.example.climaapp.R
@@ -20,4 +22,14 @@ fun ImageView.setCloudImage(type: WeatherType){
                 else -> R.drawable.ic_cloud
             }
     )
+}
+
+@BindingAdapter("permissionsGranted")
+fun Button.setVisibility(flag: Boolean){
+    if(flag){
+        visibility = View.VISIBLE
+    }
+    else{
+        visibility = View.INVISIBLE
+    }
 }

@@ -27,6 +27,9 @@ class ClimaViewModel: ViewModel(){
     val weatherType: LiveData<WeatherType>
         get() = _weatherType
 
+    private val _permissionsGranted = MutableLiveData<Boolean>()
+    val permissionsGranted: LiveData<Boolean>
+        get() = _permissionsGranted
 
     private val _refreshEvent = MutableLiveData<Boolean>()
     val refreshEvent: LiveData<Boolean>
