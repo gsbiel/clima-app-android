@@ -117,8 +117,8 @@ class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
                     override fun onLocationChanged(location: Location?) {
                         if (location != null) {
                             locationGps = location
-                            Log.d("CodeAndroidLocation", " GPS Latitude : " + locationGps!!.latitude)
-                            Log.d("CodeAndroidLocation", " GPS Longitude : " + locationGps!!.longitude)
+//                            Log.d("CodeAndroidLocation", " GPS Latitude : " + locationGps!!.latitude)
+//                            Log.d("CodeAndroidLocation", " GPS Longitude : " + locationGps!!.longitude)
                         }
                     }
 
@@ -147,8 +147,8 @@ class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
                     override fun onLocationChanged(location: Location?) {
                         if (location != null) {
                             locationNetwork = location
-                            Log.d("CodeAndroidLocation", " Network Latitude : " + locationNetwork!!.latitude)
-                            Log.d("CodeAndroidLocation", " Network Longitude : " + locationNetwork!!.longitude)
+//                            Log.d("CodeAndroidLocation", " Network Latitude : " + locationNetwork!!.latitude)
+//                            Log.d("CodeAndroidLocation", " Network Longitude : " + locationNetwork!!.longitude)
                         }
                     }
 
@@ -175,9 +175,15 @@ class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
                 if(locationGps!!.accuracy > locationNetwork!!.accuracy){
                     Log.d("CodeAndroidLocation", " Network Latitude : " + locationNetwork!!.latitude)
                     Log.d("CodeAndroidLocation", " Network Longitude : " + locationNetwork!!.longitude)
+                    viewModel.setLatitudeTo(locationNetwork!!.latitude)
+                    viewModel.setLongitudeTo(locationNetwork!!.longitude)
+                    viewModel.fetchWeatherDataBasedOnLatLongEntry()
                 }else{
                     Log.d("CodeAndroidLocation", " GPS Latitude : " + locationGps!!.latitude)
                     Log.d("CodeAndroidLocation", " GPS Longitude : " + locationGps!!.longitude)
+                    viewModel.setLatitudeTo(locationGps!!.latitude)
+                    viewModel.setLongitudeTo(locationGps!!.longitude)
+                    viewModel.fetchWeatherDataBasedOnLatLongEntry()
                 }
             }
 
@@ -213,6 +219,7 @@ class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
             }
             if (allSuccess) {
                 Log.i("ClimaFragment", "allSuccess!")
+                getLocation()
                 viewModel.setPermissionsTo(true)
             }
         }

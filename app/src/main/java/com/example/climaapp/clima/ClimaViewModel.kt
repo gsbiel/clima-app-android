@@ -12,6 +12,14 @@ enum class WeatherType {
 
 class ClimaViewModel: ViewModel(){
 
+    private val _latitude = MutableLiveData<Double>()
+    val latitude: LiveData<Double>
+        get() = _latitude
+
+    private val _longitude = MutableLiveData<Double>()
+    val longitude: LiveData<Double>
+        get() = _longitude
+
     private val _temperature = MutableLiveData<Double>()
     val temperature = Transformations.map(_temperature){
         "%.1f".format(it)
@@ -58,8 +66,20 @@ class ClimaViewModel: ViewModel(){
         _setPermissionEvent.value = true
     }
 
+    fun setLatitudeTo(value: Double){
+        _latitude.value = value
+    }
+
+    fun setLongitudeTo(value: Double){
+        _longitude.value = value
+    }
+
     fun setPermissionsTo(flag: Boolean){
         _permissionsGranted.value = flag
+    }
+    
+    fun fetchWeatherDataBasedOnLatLongEntry(){
+
     }
 
     fun refresh(){
