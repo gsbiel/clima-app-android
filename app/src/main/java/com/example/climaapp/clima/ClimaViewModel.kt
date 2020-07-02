@@ -77,7 +77,7 @@ class ClimaViewModel: ViewModel(){
     fun setPermissionsTo(flag: Boolean){
         _permissionsGranted.value = flag
     }
-    
+
     fun fetchWeatherDataBasedOnLatLongEntry(){
 
     }

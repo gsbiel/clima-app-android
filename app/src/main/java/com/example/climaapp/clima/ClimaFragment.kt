@@ -23,6 +23,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.example.climaapp.BuildConfig
 import com.example.climaapp.R
 import com.example.climaapp.databinding.FragmentWeatherBinding
 import com.example.climaapp.hideKeyboard
