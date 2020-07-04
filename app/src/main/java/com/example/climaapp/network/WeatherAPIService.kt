@@ -8,7 +8,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-private const val BASE_URL = "api.openweathermap.org/data/2.5/"
+private const val BASE_URL = "https://api.openweathermap.org/data/2.5/"
 
 // POR COORDENADAS
 //"lat={lat}&lon={lon}&appid={your api key}"
@@ -27,20 +27,20 @@ private val retrofit = Retrofit.Builder()
         .build()
 
 interface WeatherAPIService{
-    @GET("/weather")
+    @GET("weather")
     fun getWeatherDataByGeolocation(
             @Query("lat") latitude: String,
             @Query("lon") longitude: String,
             @Query("appid") apiKey: String
     ):
-            Call<List<WeatherProperty>>
+            Call<WeatherProperty>
 
-    @GET("/weather")
+    @GET("weather")
     fun getWeatherDataByCityName(
             @Query("q") cityName: String,
             @Query("appid") apiKey: String
     ):
-            Call<List<WeatherProperty>>
+            Call<WeatherProperty>
 }
 
 object WeatherApi {

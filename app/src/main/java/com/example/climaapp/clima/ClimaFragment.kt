@@ -113,7 +113,7 @@ class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
         if (hasGps || hasNetwork) {
 
             if (hasGps) {
-                Log.d("CodeAndroidLocation", "hasGps")
+//                Log.d("CodeAndroidLocation", "hasGps")
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, object : LocationListener {
                     override fun onLocationChanged(location: Location?) {
                         if (location != null) {
@@ -143,7 +143,7 @@ class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
             }
 
             if (hasNetwork) {
-                Log.d("CodeAndroidLocation", "hasGps")
+//                Log.d("CodeAndroidLocation", "hasGps")
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0F, object : LocationListener {
                     override fun onLocationChanged(location: Location?) {
                         if (location != null) {
@@ -174,14 +174,14 @@ class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
 
             if(locationGps!= null && locationNetwork!= null){
                 if(locationGps!!.accuracy > locationNetwork!!.accuracy){
-                    Log.d("CodeAndroidLocation", " Network Latitude : " + locationNetwork!!.latitude)
-                    Log.d("CodeAndroidLocation", " Network Longitude : " + locationNetwork!!.longitude)
+//                    Log.d("CodeAndroidLocation", " Network Latitude : " + locationNetwork!!.latitude)
+//                    Log.d("CodeAndroidLocation", " Network Longitude : " + locationNetwork!!.longitude)
                     viewModel.setLatitudeTo(locationNetwork!!.latitude)
                     viewModel.setLongitudeTo(locationNetwork!!.longitude)
                     viewModel.fetchWeatherDataBasedOnLatLongEntry()
                 }else{
-                    Log.d("CodeAndroidLocation", " GPS Latitude : " + locationGps!!.latitude)
-                    Log.d("CodeAndroidLocation", " GPS Longitude : " + locationGps!!.longitude)
+//                    Log.d("CodeAndroidLocation", " GPS Latitude : " + locationGps!!.latitude)
+//                    Log.d("CodeAndroidLocation", " GPS Longitude : " + locationGps!!.longitude)
                     viewModel.setLatitudeTo(locationGps!!.latitude)
                     viewModel.setLongitudeTo(locationGps!!.longitude)
                     viewModel.fetchWeatherDataBasedOnLatLongEntry()

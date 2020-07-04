@@ -5,6 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.example.climaapp.BuildConfig
+import com.example.climaapp.network.WeatherApi
+import com.example.climaapp.network.WeatherProperty
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 enum class WeatherType {
     CLOUD, CLOUD_BOLT, CLOUD_DRIZZLE, CLOUD_FOG, CLOUD_RAIN, CLOUD_SNOW, SUN, SNOW, RAIN
@@ -79,7 +85,41 @@ class ClimaViewModel: ViewModel(){
     }
 
     fun fetchWeatherDataBasedOnLatLongEntry(){
+        Log.i("ClimaViewModel", "Fetch data for lat: ${_latitude.value} and long: ${_longitude.value}")
+        WeatherApi.retrofitService.getWeatherDataByGeolocation(
+                _latitude.value!!.toString(),
+                _longitude.value!!.toString(),
+                BuildConfig.WEATHER_API_KEY
+        ).enqueue(object : Callback<WeatherProperty> {
 
+            override fun onFailure(call: Call<WeatherProperty>, t: Throwable) {
+                Log.i("ClimaViewModel", "Erro na requisição :(. Erro: ${t.message}")
+            }
+
+            override fun onResponse(call: Call<WeatherProperty>, response: Response<WeatherProperty>) {
+                Log.i("ClimaViewModel", "Requisição bem sucedida!, resposta: ${response.body().toString()}")
+                Log.i("ClimaViewModel", "Cidade: ${response.body()?.name}")
+                Log.i("ClimaViewModel", "Id do clima: ${response.body()?.weather?.get(0)?.id}")
+                Log.i("ClimaViewModel", "Temperatura: ${(response.body()?.main?.temp?.minus(273))}")
+
+                _weatherType.value = response.body()?.weather?.get(0)?.id?.toInt()?.let { getWeatherTypeFor(it) }
+                _city.value = response.body()?.name
+                _temperature.value = response.body()?.main?.temp?.minus(273)
+            }
+        })
+    }
+
+    private fun getWeatherTypeFor(id: Int): WeatherType{
+        return when(id){
+            in 200..232 -> WeatherType.RAIN
+            in 300..321 -> WeatherType.CLOUD_DRIZZLE
+            in 500..531 -> WeatherType.CLOUD_RAIN
+            in 600..622 -> WeatherType.CLOUD_SNOW
+            in 701..781 -> WeatherType.CLOUD_FOG
+            in 800..800 -> WeatherType.SUN
+            in 801..804 -> WeatherType.RAIN
+            else -> WeatherType.CLOUD
+        }
     }
 
     fun refresh(){
