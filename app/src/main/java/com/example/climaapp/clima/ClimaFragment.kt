@@ -23,7 +23,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.example.climaapp.BuildConfig
 import com.example.climaapp.R
 import com.example.climaapp.databinding.FragmentWeatherBinding
 import com.example.climaapp.hideKeyboard
@@ -56,7 +55,10 @@ class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkPermission(permissions)) {
                 Log.i("ClimaFragment", "Todas as permissões okay!")
-                getLocation()
+                if(viewModel.shouldGetWeatherDataBasedInCurrentLocation.value!!){
+                    viewModel.shouldGetWeatherDataBasedInCurrentLocation.value = false
+                    getLocation()
+                }
             } else {
                 requestPermissions(permissions, PERMISSION_REQUEST)
             }

@@ -13,18 +13,14 @@ import retrofit2.Callback
 import retrofit2.Response
 
 enum class WeatherType {
-    CLOUD, CLOUD_BOLT, CLOUD_DRIZZLE, CLOUD_FOG, CLOUD_RAIN, CLOUD_SNOW, SUN, SNOW, RAIN
+    CLOUD, CLOUD_BOLT, CLOUD_DRIZZLE, CLOUD_FOG, CLOUD_RAIN, CLOUD_SNOW, SUN, SNOW, RAIN, ERROR
 }
 
 class ClimaViewModel: ViewModel(){
 
     private val _latitude = MutableLiveData<Double>()
-    val latitude: LiveData<Double>
-        get() = _latitude
 
     private val _longitude = MutableLiveData<Double>()
-    val longitude: LiveData<Double>
-        get() = _longitude
 
     private val _temperature = MutableLiveData<Double>()
     val temperature = Transformations.map(_temperature){
@@ -53,6 +49,8 @@ class ClimaViewModel: ViewModel(){
     val setPermissionEvent: LiveData<Boolean>
         get() = _setPermissionEvent
 
+    val shouldGetWeatherDataBasedInCurrentLocation = MutableLiveData<Boolean>()
+
     init{
         _temperature.value = 29.0
         _city.value = "Vitória"
@@ -60,6 +58,7 @@ class ClimaViewModel: ViewModel(){
         _refreshEvent.value = false
         _setPermissionEvent.value = false
         _permissionsGranted.value = true
+        shouldGetWeatherDataBasedInCurrentLocation.value = true
     }
 
     fun onSendButtonPressed() {
@@ -102,9 +101,15 @@ class ClimaViewModel: ViewModel(){
 
             override fun onResponse(call: Call<WeatherProperty>, response: Response<WeatherProperty>) {
                 Log.i("ClimaViewModel", "Requisição bem sucedida. Resposta: $response")
-                _weatherType.value = response.body()?.weather?.get(0)?.id?.toInt()?.let { getWeatherTypeFor(it) }
-                _city.value = response.body()?.name
-                _temperature.value = response.body()?.main?.temp?.minus(273)
+                if(response.code() == 200){
+                    _weatherType.value = response.body()?.weather?.get(0)?.id?.toInt()?.let { getWeatherTypeFor(it) }
+                    _city.value = response.body()?.name
+                    _temperature.value = response.body()?.main?.temp?.minus(273)
+                }else{
+                    _weatherType.value = getWeatherTypeFor(-1)
+                    _city.value = "Not Found!"
+                    _temperature.value = 0.0
+                }
             }
 
         })
@@ -123,9 +128,15 @@ class ClimaViewModel: ViewModel(){
             }
 
             override fun onResponse(call: Call<WeatherProperty>, response: Response<WeatherProperty>) {
-                _weatherType.value = response.body()?.weather?.get(0)?.id?.toInt()?.let { getWeatherTypeFor(it) }
-                _city.value = response.body()?.name
-                _temperature.value = response.body()?.main?.temp?.minus(273)
+                if(response.code() == 200){
+                    _weatherType.value = response.body()?.weather?.get(0)?.id?.toInt()?.let { getWeatherTypeFor(it) }
+                    _city.value = response.body()?.name
+                    _temperature.value = response.body()?.main?.temp?.minus(273)
+                }else{
+                    _weatherType.value = getWeatherTypeFor(-1)
+                    _city.value = "Not Found!"
+                    _temperature.value = 0.0
+                }
             }
         })
     }
@@ -139,7 +150,7 @@ class ClimaViewModel: ViewModel(){
             in 701..781 -> WeatherType.CLOUD_FOG
             in 800..800 -> WeatherType.SUN
             in 801..804 -> WeatherType.RAIN
-            else -> WeatherType.CLOUD
+            else -> WeatherType.ERROR
         }
     }
 

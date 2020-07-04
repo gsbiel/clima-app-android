@@ -19,6 +19,7 @@ fun ImageView.setCloudImage(type: WeatherType){
                 WeatherType.SUN -> R.drawable.ic_sun
                 WeatherType.SNOW -> R.drawable.ic_snowflake
                 WeatherType.RAIN -> R.drawable.ic_rain
+                WeatherType.ERROR -> R.drawable.ic_sentiment_very_dissatisfied_black_24dp
                 else -> R.drawable.ic_cloud
             }
     )
