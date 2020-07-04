@@ -93,6 +93,7 @@ class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
 
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
         if(v?.id == binding.searchEditText.id && actionId == EditorInfo.IME_ACTION_SEND){
+            viewModel.setCityNameTo(v.text.toString())
             viewModel.onSendButtonPressed()
             binding.searchEditText.clearFocus()
             dismissSoftKeyboard()

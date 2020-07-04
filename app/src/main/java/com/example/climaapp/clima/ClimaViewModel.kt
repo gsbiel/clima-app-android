@@ -65,6 +65,7 @@ class ClimaViewModel: ViewModel(){
     fun onSendButtonPressed() {
         Log.i("ClimaViewModel", "Send Button pressed!")
         textInput.value = ""
+        fetchWeatherDataBasedOnCityName()
     }
 
     fun onSetPermissionButtonPressed() {
@@ -80,8 +81,33 @@ class ClimaViewModel: ViewModel(){
         _longitude.value = value
     }
 
+    fun setCityNameTo(value: String){
+        _city.value = value
+    }
+
+
     fun setPermissionsTo(flag: Boolean){
         _permissionsGranted.value = flag
+    }
+
+    private fun fetchWeatherDataBasedOnCityName(){
+        Log.i("ClimaViewModel", "Fetch data for city: ${_city.value}")
+        WeatherApi.retrofitService.getWeatherDataByCityName(
+                _city.value!!,
+                BuildConfig.WEATHER_API_KEY
+        ).enqueue(object : Callback<WeatherProperty> {
+            override fun onFailure(call: Call<WeatherProperty>, t: Throwable) {
+                Log.i("ClimaViewModel", "Erro na requisição :(. Erro: ${t.message}")
+            }
+
+            override fun onResponse(call: Call<WeatherProperty>, response: Response<WeatherProperty>) {
+                Log.i("ClimaViewModel", "Requisição bem sucedida. Resposta: $response")
+                _weatherType.value = response.body()?.weather?.get(0)?.id?.toInt()?.let { getWeatherTypeFor(it) }
+                _city.value = response.body()?.name
+                _temperature.value = response.body()?.main?.temp?.minus(273)
+            }
+
+        })
     }
 
     fun fetchWeatherDataBasedOnLatLongEntry(){
@@ -97,11 +123,6 @@ class ClimaViewModel: ViewModel(){
             }
 
             override fun onResponse(call: Call<WeatherProperty>, response: Response<WeatherProperty>) {
-                Log.i("ClimaViewModel", "Requisição bem sucedida!, resposta: ${response.body().toString()}")
-                Log.i("ClimaViewModel", "Cidade: ${response.body()?.name}")
-                Log.i("ClimaViewModel", "Id do clima: ${response.body()?.weather?.get(0)?.id}")
-                Log.i("ClimaViewModel", "Temperatura: ${(response.body()?.main?.temp?.minus(273))}")
-
                 _weatherType.value = response.body()?.weather?.get(0)?.id?.toInt()?.let { getWeatherTypeFor(it) }
                 _city.value = response.body()?.name
                 _temperature.value = response.body()?.main?.temp?.minus(273)
