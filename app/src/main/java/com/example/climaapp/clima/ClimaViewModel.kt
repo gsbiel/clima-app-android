@@ -52,8 +52,8 @@ class ClimaViewModel: ViewModel(){
     val shouldGetWeatherDataBasedInCurrentLocation = MutableLiveData<Boolean>()
 
     init{
-        _temperature.value = 29.0
-        _city.value = "Vitória"
+        _temperature.value = 0.0
+        _city.value = "---"
         _weatherType.value = WeatherType.CLOUD_FOG
         _refreshEvent.value = false
         _setPermissionEvent.value = false
