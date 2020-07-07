@@ -1,11 +1,10 @@
 package com.example.climaapp.clima
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.climaapp.BuildConfig
+import com.example.climaapp.database.WeatherDatabaseDao
 import com.example.climaapp.network.WeatherApi
 import com.example.climaapp.network.WeatherProperty
 import retrofit2.Call
@@ -16,7 +15,9 @@ enum class WeatherType {
     CLOUD, CLOUD_BOLT, CLOUD_DRIZZLE, CLOUD_FOG, CLOUD_RAIN, CLOUD_SNOW, SUN, SNOW, RAIN, ERROR
 }
 
-class ClimaViewModel: ViewModel(){
+class ClimaViewModel(
+        val database: WeatherDatabaseDao,
+        application: Application): AndroidViewModel(application){
 
     private val _latitude = MutableLiveData<Double>()
 

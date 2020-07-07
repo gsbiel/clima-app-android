@@ -3,11 +3,11 @@ package com.example.climaapp.network
 data class WeatherProperty(
         val id: Double,
         val name: String,
-        val weather: List<WeatherData>,
+        val weather: List<WeatherDataProperty>,
         val main: MainData
 )
 
-data class WeatherData(
+data class WeatherDataProperty(
         val id: Double,
         val main: String
 )

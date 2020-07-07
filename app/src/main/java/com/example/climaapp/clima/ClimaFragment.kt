@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.climaapp.R
+import com.example.climaapp.database.WeatherDatabase
 import com.example.climaapp.databinding.FragmentWeatherBinding
 import com.example.climaapp.hideKeyboard
 
@@ -32,6 +33,7 @@ private const val PERMISSION_REQUEST = 10
 class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
 
     private lateinit var viewModel: ClimaViewModel
+    private lateinit var viewModelFactory: ClimaViewModelFactory
     private lateinit var binding: FragmentWeatherBinding
 
     lateinit var locationManager: LocationManager
@@ -45,7 +47,10 @@ class ClimaFragment: Fragment(), TextView.OnEditorActionListener{
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_weather, container, false)
         binding.lifecycleOwner = this
 
-        viewModel = ViewModelProviders.of(this).get(ClimaViewModel::class.java)
+        val application = requireNotNull(this.activity).application
+        val databaseDao = WeatherDatabase.getInstance(application).weatherDatabaseDao
+        viewModelFactory = ClimaViewModelFactory(databaseDao, application)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ClimaViewModel::class.java)
         binding.viewModel = viewModel
 
         binding.searchEditText.setOnEditorActionListener(this)

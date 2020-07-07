@@ -10,6 +10,7 @@ buildscript {
         version_retrofit = "2.5.0"
         version_service_location = "17.0.0"
         room_version = "2.0.0"
+        version_kotlin_coroutines = "1.1.0"
     }
 
     repositories {

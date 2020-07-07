@@ -1,5 +1,6 @@
 package com.example.climaapp.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
@@ -11,5 +12,5 @@ interface WeatherDatabaseDao{
     fun insert(weatherData: WeatherData)
 
     @Query("SELECT * FROM weather_data_cache WHERE data_type = 'cache'")
-    fun getCache(): WeatherData?
+    fun getCache(): LiveData<WeatherData>
 }
