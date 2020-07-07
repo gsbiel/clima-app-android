@@ -14,7 +14,7 @@ data class WeatherData(
         var dataType: String,
 
         @ColumnInfo(name="weather_type")
-        var weatherType: WeatherType,
+        var weatherType: WeatherType?,
 
         @ColumnInfo(name="weather_temperature")
         var weatherTemperature: Double,
